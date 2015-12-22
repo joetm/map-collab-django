@@ -9,7 +9,14 @@ map.addControl(new L.Control.Draw({
 }));
 
 map.on('draw:created', function(event) {
-    var layer = event.layer;
+    var layer = event.layer,
+        type = event.layerType;
+
+    layer = e.layer;
+
+    if (type === 'marker') {
+        // Do marker specific actions
+    }
 
     drawnItems.addLayer(layer);
 });
