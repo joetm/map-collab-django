@@ -6,6 +6,10 @@
 
 define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backbone, L) {
 
+    //$.ajaxPrefilter(function( options ) {
+    //    options.dataType = "json";
+    //});
+
     var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
@@ -22,24 +26,33 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
 
     function addToMap(g) {
         'use strict';
-        console.log('add event:', g);
+        //console.log('add event:', g);
         var encoded = g.get('geometry');
-        var id = g.get('id');
-        switch (g.get('type')) {
+        var id = g.get('id'),
+            type = g.get('type'),
+            options = g.get('options');
+        if (options) {
+            options = JSON.parse(options);
+        }
+        switch (type) {
+        case 'circle':
+            //fall through
         case 'marker':
             var m = L.Polygon.fromEncoded(encoded),
-                obj = m.getLatLngs();
-            //console.log(m);
-            L.marker(obj[0]).addTo(map);
+                latlng = m.getLatLngs()[0];
+            if (type === 'circle') {
+                //circle
+                L.circle(latlng, options.radius).addTo(map);
+            } else {
+                //marker
+                L.marker(latlng).addTo(map);
+            }
             break;
         case 'polyline':
             var pl = L.Polyline.fromEncoded(encoded).addTo(map);
             break;
         case 'polygon':
             var pg = L.Polygon.fromEncoded(encoded).addTo(map);
-            break;
-        case 'circle':
-            var ci = L.Polyline.fromEncoded(encoded).addTo(map);
             break;
         case 'rectangle':
             var rc = L.Polygon.fromEncoded(encoded).addTo(map);
@@ -65,26 +78,31 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             model;
         console.log('created:', type, layer);
         switch (type) {
+        case 'circle':
+            //fall through
         case 'marker':
             var latlng = [layer._latlng.lat, layer._latlng.lng],
-                encoded = L.PolylineUtil.encode([latlng]);
-            model = new Feature({
+                encoded = L.PolylineUtil.encode([latlng]),
+                f = {
                     type: type,
                     //latlng: layer._latlng,
                     //options: layer.options
                     //layer: layer
                     geometry: encoded
-                });
+                };
+            if (type == 'circle') {
+                f.options = layer.options;
+                f.options.radius = layer._mRadius;
+                console.log('options', f.options)
+            }
+            model = new Feature(f);
             model.save();
             break;
         case 'polyline':
            //fall through
         case 'polygon':
            //fall through
-        case 'circle':
-           //fall through
         case 'rectangle':
-            //polyline encoding with Leaflet plugin
             var encoded = layer.encodePath();
             model = new Feature({
                     type: type,
@@ -97,6 +115,7 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             model.save();
             break;
         }
+
         //add geometry to map
         drawnItems.addLayer(layer);
     });

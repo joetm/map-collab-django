@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-	$s = $db->query('SELECT id, type, geometry, username, creation, modified from geometry');
+	$s = $db->query('SELECT id, type, geometry, options, username, creation, modified from geometry');
  
 	# setting the fetch mode
 	$s->setFetchMode(PDO::FETCH_ASSOC);
@@ -35,13 +35,10 @@ elseif (in_array($_SERVER['REQUEST_METHOD'], array('PUT','POST'))) {
 
 	// upsert or save the feature
 
-	$s = $db->prepare("INSERT INTO geometry ( id, type, geometry, username, creation ) values ( NULL, :type, :geometry, :username, :creation)");
-	//$s->bindParam(':geometry', $input['geometry']);
-	//$s->bindParam(':type', $input['type']);
-	//$s->bindParam(':username', 'Hans');
-	//$s->bindParam(':creation', time());
+	$s = $db->prepare("INSERT INTO geometry ( id, type, geometry, options, username, creation ) values ( NULL, :type, :geometry, :options, :username, :creation)");
 	$input['username'] = 'Hans';
 	$input['creation'] = time();
+	$input['options'] = json_encode($input['options']);
 	$s->execute($input);
 
 }
