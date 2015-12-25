@@ -12,6 +12,8 @@ var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         model: Feature
     });
 
+
+
 map.addControl(new L.Control.Draw({
     edit: {featureGroup: drawnItems}
 }));
@@ -28,8 +30,9 @@ map.on('draw:created', function(event) {
        case 'marker':
             var marker = new Feature({
                 type: type,
-                latlng: layer._latlng,
-                options: layer.options
+                //latlng: layer._latlng,
+                //options: layer.options
+                layer: layer
             });
             marker.save();
             break;
@@ -40,10 +43,17 @@ map.on('draw:created', function(event) {
        case 'circle':
            //fall through
        case 'rectangle':
+
+            //polyline encoding with Leaflet plugin
+            var encoded = layer.encodePath();
+            console.log(encoded)
+
             var model = new Feature({
                 type: type,
-                latlngs: layer._latlngs,
-                options: layer.options
+                //latlngs: layer._latlngs,
+                //options: layer.options
+                //layer: layer
+                geometry: encoded
             });
             model.save();
             break;
