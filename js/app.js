@@ -33,6 +33,7 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             options = g.get('options');
         if (options) {
             options = JSON.parse(options);
+            console.log('options', options);
         }
         switch (type) {
         case 'circle':

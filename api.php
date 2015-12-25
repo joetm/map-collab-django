@@ -34,13 +34,15 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 elseif (in_array($_SERVER['REQUEST_METHOD'], array('PUT','POST'))) {
 
 	// upsert or save the feature
-
 	$s = $db->prepare("INSERT INTO geometry ( id, type, geometry, options, username, creation ) values ( NULL, :type, :geometry, :options, :username, :creation)");
 	$input['username'] = 'Hans';
 	$input['creation'] = time();
-	$input['options'] = json_encode($input['options']);
+	if (!empty($input['options'])) {
+		$input['options'] = json_encode($input['options']);
+	} else {
+		$input['options'] = "{}";
+	}
 	$s->execute($input);
-
 }
 
 

@@ -1,5 +1,7 @@
 db.php
 
+featuretypes.json
+
 .coveralls.yml
 
 ./**/BAK/
