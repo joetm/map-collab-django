@@ -17,7 +17,8 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
         drawnItems = L.featureGroup().addTo(map),
         //Backbone
         Feature = Backbone.Model.extend({
-            urlRoot : './api.php'
+            urlRoot : './api.php',
+            idAttribute: "_leaflet_id"
         }),
         Features = Backbone.Collection.extend({
             url: './api.php',
@@ -84,53 +85,78 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
         edit: {featureGroup: drawnItems}
     }));
 
-    //map events
-    map.on('draw:created', function (event) {
-        'use strict';
-        var layer = event.layer,
-            type = event.layerType,
-            model;
-        console.log('created:', type, layer);
+    function prepare_feature(layer, type) {
+        var f,
+            encoded;
         switch (type) {
         case 'circle':
             //fall through
         case 'marker':
-            var latlng = [layer._latlng.lat, layer._latlng.lng],
-                encoded = L.PolylineUtil.encode([latlng]),
-                f = {
-                    type: type,
-                    //latlng: layer._latlng,
-                    //options: layer.options
-                    //layer: layer
-                    geometry: encoded
-                };
+            encoded = L.PolylineUtil.encode([ [layer._latlng.lat, layer._latlng.lng] ]);
+            f = {
+                type: type,
+                options: layer.options,
+                geometry: encoded
+            };
             if (type == 'circle') {
                 f.options = layer.options;
                 f.options.radius = layer._mRadius;
                 console.log('options', f.options)
             }
-            model = new Feature(f);
-            model.save();
             break;
         case 'polyline':
            //fall through
         case 'polygon':
            //fall through
         case 'rectangle':
-            var encoded = layer.encodePath();
-            model = new Feature({
-                    type: type,
-                    //latlngs: layer._latlngs,
-                    //options: layer.options
-                    //layer: layer
-                    geometry: encoded
-                });
-            console.log(encoded);
-            model.save();
+            encoded = layer.encodePath();
+            f = {
+                type: type,
+                options: layer.options,
+                geometry: encoded
+            };
             break;
         }
+        return f;
+    }
+
+    //map events
+    map.on('draw:created', function (event) {
+        'use strict';
+        var layer = event.layer,
+            type = event.layerType,
+            f = prepare_feature(layer, type),
+            //save
+            model = new Feature(f);
+        //Features.add(model);
+        model.save();
         //add geometry to map
         drawnItems.addLayer(layer);
+    });
+
+    //map events
+    map.on('draw:deleted', function (event) {
+        'use strict';
+        var layers = event.layers._layers,
+            model,
+            i = 0,
+            f,
+            id,
+            s = layers.length;
+        console.log('layers', layers)
+        _.each(layers, function (item) {
+            console.log('item', item);
+            id = item._leaflet_id;
+            //save
+            console.log('delete id: ', id);
+            //get the model
+            model = Features.get(id);
+            //delete
+            model.destroy({success: function(m, res) {
+                console.log('success', m, res);
+            }});
+        });
+        //f = prepare_feature(event);
     });
 
 });
