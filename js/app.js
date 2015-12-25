@@ -27,38 +27,42 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
     function addToMap(g) {
         'use strict';
         //console.log('add event:', g);
-        var encoded = g.get('geometry');
-        var id = g.get('id'),
+        var encoded = g.get('geometry'),
+            m,
+            id = g.get('id'),
             type = g.get('type'),
             options = g.get('options');
         if (options) {
             options = JSON.parse(options);
-            console.log('options', options);
+        } else {
+            options = {};
         }
         switch (type) {
         case 'circle':
             //fall through
         case 'marker':
-            var m = L.Polygon.fromEncoded(encoded),
-                latlng = m.getLatLngs()[0];
+            var p = L.Polygon.fromEncoded(encoded),
+                latlng = p.getLatLngs()[0];
             if (type === 'circle') {
                 //circle
-                L.circle(latlng, options.radius).addTo(map);
+                m = L.circle(latlng, options.radius); //.addTo(map);
             } else {
                 //marker
-                L.marker(latlng).addTo(map);
+                m = L.marker(latlng); //.addTo(map);
             }
             break;
         case 'polyline':
-            var pl = L.Polyline.fromEncoded(encoded).addTo(map);
+            m = L.Polyline.fromEncoded(encoded); //.addTo(map);
             break;
         case 'polygon':
-            var pg = L.Polygon.fromEncoded(encoded).addTo(map);
+            m = L.Polygon.fromEncoded(encoded); //.addTo(map);
             break;
         case 'rectangle':
-            var rc = L.Polygon.fromEncoded(encoded).addTo(map);
+            m = L.Polygon.fromEncoded(encoded); //.addTo(map);
             break;
         }
+        //add geometry to map
+        drawnItems.addLayer(m);
     }
 
     //populate map
@@ -116,7 +120,6 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             model.save();
             break;
         }
-
         //add geometry to map
         drawnItems.addLayer(layer);
     });
