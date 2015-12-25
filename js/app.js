@@ -31,7 +31,9 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             m,
             id = g.get('id'),
             type = g.get('type'),
-            options = g.get('options');
+            options = g.get('options'),
+            p,
+            latlng;
         if (options) {
             options = JSON.parse(options);
         } else {
@@ -41,8 +43,8 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
         case 'circle':
             //fall through
         case 'marker':
-            var p = L.Polygon.fromEncoded(encoded),
-                latlng = p.getLatLngs()[0];
+            p = L.Polygon.fromEncoded(encoded),
+            latlng = p.getLatLngs()[0];
             if (type === 'circle') {
                 //circle
                 m = L.circle(latlng, options.radius); //.addTo(map);
@@ -55,12 +57,19 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             m = L.Polyline.fromEncoded(encoded); //.addTo(map);
             break;
         case 'polygon':
-            m = L.Polygon.fromEncoded(encoded); //.addTo(map);
-            break;
+            //fallthrough
         case 'rectangle':
             m = L.Polygon.fromEncoded(encoded); //.addTo(map);
             break;
         }
+
+        //click event
+        m.on('click', function(e) {
+            console.log('click', e.target);
+            //console.log('this', this);
+
+        });
+
         //add geometry to map
         drawnItems.addLayer(m);
     }
