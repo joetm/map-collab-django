@@ -20,18 +20,17 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             model: Feature
         });
 
-
     function addToMap(g) {
         'use strict';
-
         console.log('add event:', g);
-
         var encoded = g.get('geometry');
         var id = g.get('id');
-
         switch (g.get('type')) {
         case 'marker':
-            var m = L.Polyline.fromEncoded(encoded).addTo(map);
+            var m = L.Polygon.fromEncoded(encoded),
+                obj = m.getLatLngs();
+            //console.log(m);
+            L.marker(obj[0]).addTo(map);
             break;
         case 'polyline':
             var pl = L.Polyline.fromEncoded(encoded).addTo(map);
@@ -46,40 +45,37 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             var rc = L.Polygon.fromEncoded(encoded).addTo(map);
             break;
         }
-
     }
 
-    var geometries = new Features();
-
-    geometries.on('add', addToMap);
-
     //populate map
+    var geometries = new Features();
+    geometries.on('add', addToMap);
     geometries.fetch();
 
-
-
+    //map controls
     map.addControl(new L.Control.Draw({
         edit: {featureGroup: drawnItems}
     }));
 
+    //map events
     map.on('draw:created', function (event) {
         'use strict';
         var layer = event.layer,
-            type = event.layerType;
-
-        layer = event.layer;
-
+            type = event.layerType,
+            model;
         console.log('created:', type, layer);
-
         switch (type) {
         case 'marker':
-            var marker = new Feature({
+            var latlng = [layer._latlng.lat, layer._latlng.lng],
+                encoded = L.PolylineUtil.encode([latlng]);
+            model = new Feature({
                     type: type,
                     //latlng: layer._latlng,
                     //options: layer.options
-                    layer: layer
+                    //layer: layer
+                    geometry: encoded
                 });
-            marker.save();
+            model.save();
             break;
         case 'polyline':
            //fall through
@@ -88,10 +84,9 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
         case 'circle':
            //fall through
         case 'rectangle':
-
             //polyline encoding with Leaflet plugin
-            var encoded = layer.encodePath(),
-                model = new Feature({
+            var encoded = layer.encodePath();
+            model = new Feature({
                     type: type,
                     //latlngs: layer._latlngs,
                     //options: layer.options
@@ -102,9 +97,8 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
             model.save();
             break;
         }
-
+        //add geometry to map
         drawnItems.addLayer(layer);
     });
-
 
 });
