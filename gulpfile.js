@@ -38,10 +38,10 @@ gulp.task('jslint', function () {
 });
 
 
-gulp.task('coveralls', function() {
-    gulp.src('./test/coverage/**/lcov.info')
-      .pipe(coveralls());
-});
+//gulp.task('coveralls', function() {
+//    gulp.src('./test/coverage/**/lcov.info')
+//      .pipe(coveralls());
+//});
 
 
 //uglify

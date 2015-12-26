@@ -15,19 +15,20 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
         osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
         map = new L.Map('map', {layers: [osm], center: new L.LatLng(51.505, -0.04), zoom: 13}),
         drawnItems = L.featureGroup().addTo(map),
+        editGroup = L.featureGroup(),
         //Backbone
         Feature = Backbone.Model.extend({
-            urlRoot : './api.php',
+            urlRoot : './api/index.php',
             idAttribute: "_leaflet_id"
         }),
         Features = Backbone.Collection.extend({
-            url: './api.php',
+            url: './api/index.php',
             model: Feature
         });
 
     function addToMap(g) {
         'use strict';
-        //console.log('add event:', g);
+        console.log('add event:', g);
         var encoded = g.get('geometry'),
             m,
             id = g.get('id'),
@@ -68,7 +69,8 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
         m.on('click', function(e) {
             console.log('click', e.target);
             //console.log('this', this);
-
+            //add this feature to the edit group
+            editGroup.addLayer(e.target);
         });
 
         //add geometry to map
@@ -82,7 +84,7 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
 
     //map controls
     map.addControl(new L.Control.Draw({
-        edit: {featureGroup: drawnItems}
+        edit: {featureGroup: editGroup} //drawnItems
     }));
 
     function prepare_feature(layer, type) {
@@ -132,6 +134,19 @@ define(["jquery", "backbone", "leaflet", "ldraw", "lencoded"], function($, Backb
         model.save();
         //add geometry to map
         drawnItems.addLayer(layer);
+    });
+
+    map.on('draw:edited', function (e) {
+        var layers = e.layers;
+        layers.eachLayer(function (layer) {
+            console.log('layer', layer);
+            var id = layer._leaflet_id;
+            console.log('id: ', id);
+            //save
+            //get the model
+            var model = Features.get(id);
+            model.save();
+        });
     });
 
     //map events

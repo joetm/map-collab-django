@@ -5,7 +5,7 @@
 $input = json_decode(file_get_contents('php://input'), true);
 //var_dump($input);
 
-require_once('db.php');
+require_once('./db.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
