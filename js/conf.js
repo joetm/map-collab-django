@@ -10,12 +10,14 @@ requirejs.config({
       "underscore": "backbone/underscore-min",
       "leaflet": "leaflet/leaflet",
       "ldraw": "leaflet/plugins/Leaflet.draw-0.2.4/leaflet.draw",
-      "lencoded": "leaflet/plugins/Leaflet.encoded-0.0.7/Polyline.encoded"
+      "lencoded": "leaflet/plugins/Leaflet.encoded-0.0.7/Polyline.encoded",
+      "lmarkercluster": "leaflet/plugins/Leaflet.markercluster-0.4.0-hotfix.1/dist/leaflet.markercluster"
     },
     "shim": {
         "backbone": ["underscore"],
         "ldraw":    ["leaflet"],
-        "lencoded": ["leaflet"]
+        "lencoded": ["leaflet"],
+        "lmarkercluster": ["leaflet"]
     }
 });
 
