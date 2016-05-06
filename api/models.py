@@ -20,15 +20,17 @@ class Shape(models.Model):
     created = models.DateTimeField('date created')
     updated = models.DateTimeField('last update')
 
-    leafletJSON = models.TextField() # stores the Leaflet feature as a JSON object
+    # leafletJSON = models.TextField() # stores the Leaflet feature as a JSON object
 
-    center_lat = models.DecimalField(max_digits=16, decimal_places=13)
-    center_lng = models.DecimalField(max_digits=16, decimal_places=13)
+    # TODO: remove blank=True
 
-    boundary_left   = models.DecimalField(max_digits=9, decimal_places=6)
-    boundary_right  = models.DecimalField(max_digits=9, decimal_places=6)
-    boundary_top    = models.DecimalField(max_digits=9, decimal_places=6)
-    boundary_bottom = models.DecimalField(max_digits=9, decimal_places=6)
+    # center_lat = models.DecimalField(max_digits=16, decimal_places=13, blank=True)
+    # center_lng = models.DecimalField(max_digits=16, decimal_places=13, blank=True)
+
+    # boundary_left   = models.DecimalField(max_digits=9, decimal_places=6, blank=True)
+    # boundary_right  = models.DecimalField(max_digits=9, decimal_places=6, blank=True)
+    # boundary_top    = models.DecimalField(max_digits=9, decimal_places=6, blank=True)
+    # boundary_bottom = models.DecimalField(max_digits=9, decimal_places=6, blank=True)
 
     encoded = models.CharField(max_length=250)
     options = models.TextField() # stores the Leaflet feature as a JSON object

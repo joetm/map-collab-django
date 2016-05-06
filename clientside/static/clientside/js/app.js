@@ -31,8 +31,9 @@ $(function() {
         editGroup  = L.featureGroup(),
         //Backbone
         FModel = Backbone.Model.extend({
-            urlRoot : '/api/features'
+            urlRoot : '/api/features',
             // idAttribute: "_leaflet_id" // this id will cause backbone to send PUT requests for new objects
+            idAttribute: "pk"
         }),
         FModels = Backbone.Collection.extend({
             url: '/api/features',
@@ -127,11 +128,16 @@ $(function() {
 
     function addToMap (g) {
         //console.log('g-add', g);
-        var encoded = g.get('encoded'),
-            type = g.get('type'),
-            options = g.get('options'),
+
+        // TODO
+
+        var fields = g.get('fields');
+        var encoded = fields['encoded'],
+            type = fields['type'],
+            options = fields['options'],
             //_leaflet_id = g.get('_leaflet_id'),
             f;
+
         options = JSON.parse(options);
         latlngs = L.PolylineUtil.decode(encoded);
         f = new F(type, latlngs, options);
