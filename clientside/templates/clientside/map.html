@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load staticfiles %}
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>Map</title>
+
+	<link rel="stylesheet" href="{% static 'clientside/js/vendor/leaflet/leaflet.css' %}" />
+	<link rel="stylesheet" href="{% static 'clientside/js/vendor/leaflet/plugins/Leaflet.draw-0.2.4/leaflet.draw.css' %}" />
+	<link rel="stylesheet" href="{% static 'clientside/js/vendor/leaflet/plugins/Leaflet.markercluster-1.0.0-beta.2.0/dist/MarkerCluster.css' %}" />
+	<link rel="stylesheet" href="{% static 'clientside/js/vendor/leaflet/plugins/Leaflet.markercluster-1.0.0-beta.2.0/dist/MarkerCluster.Default.css' %}" />
+	<link rel="stylesheet" href="{% static 'clientside/css/style.css' %}" />
+
+	<meta name="keywords" content="map" />
+	<meta name="robots" content="all,index,follow" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, user-scalable=yes" />
+	<meta name="HandheldFriendly" content="true" />
+	<meta name="format-detection" content="telephone=no" />
+
+</head>
+<body>
+
+	<div id="progress"><div class="bar"></div></div>
+
+	<div id="map"></div>
+
+	<script type="text/javascript" src="{% static 'clientside/js/vendor/jquery/jquery-2.1.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'clientside/js/vendor/backbone/underscore-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'clientside/js/vendor/backbone/backbone-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'clientside/js/vendor/leaflet/leaflet.js' %}"></script>
+	<!-- leaflet plugins -->
+	<script type="text/javascript" src="{% static 'clientside/js/vendor/leaflet/plugins/Leaflet.draw-0.2.4/leaflet.draw.js' %}"></script>
+	<script type="text/javascript" src="{% static 'clientside/js/vendor/leaflet/plugins/Leaflet.encoded-0.0.7/Polyline.encoded.js' %}"></script>
+	<script type="text/javascript" src="{% static 'clientside/js/vendor/leaflet/plugins/Leaflet.markercluster-0.4.0-hotfix.1/dist/leaflet.markercluster.js' %}"></script>
+	<!-- main app -->
+	<script type="text/javascript" src="{% static 'clientside/js/app.js' %}"></script>
+
+</body>
+</html>
