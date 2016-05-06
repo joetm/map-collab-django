@@ -31,8 +31,8 @@ $(function() {
         editGroup  = L.featureGroup(),
         //Backbone
         FModel = Backbone.Model.extend({
-            urlRoot : '/api/features',
-            idAttribute: "_leaflet_id"
+            urlRoot : '/api/features'
+            // idAttribute: "_leaflet_id" // this id will cause backbone to send PUT requests for new objects
         }),
         FModels = Backbone.Collection.extend({
             url: '/api/features',
@@ -186,14 +186,19 @@ $(function() {
         console.log('type', type);
         console.log('encoded', encoded);
         console.log('layer', layer);
+        console.log('latlngs', latlngs);
 
         map.addLayer(layer);
+
+        var TODO = 0.0000000000000;
 
         g = new FModel({
             '_leaflet_id': layer._leaflet_id,
             'options':     options,
             'type':        type,
-            'encoded':     encoded
+            'encoded':     encoded,
+            'center':      { 'lat': TODO, 'lng': TODO },
+            'boundary':    { 'top': TODO, 'bottom': TODO, 'left': TODO, 'right': TODO }
         });
 
         if (radius) {

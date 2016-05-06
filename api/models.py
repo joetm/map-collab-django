@@ -9,16 +9,21 @@ class Shape(models.Model):
     #     shapeList = [(cls.__name__.lower(), cls.__name__) for cls in vars()['Shape'].__subclasses__()]
     #     self.shape_type = models.CharField(max_length=20, choices=shapeList)
 
-    _leaflet_id = models.PositiveIntegerField()
+    # id = models.AutoField(primary_key=True)
+
+    _leaflet_id = models.PositiveIntegerField(primary_key=True)
 
     type = models.CharField(max_length=20)
 
     # slug = models.SlugField(max_length=50)
-    creation_date = models.DateTimeField('date created')
+
+    created = models.DateTimeField('date created')
+    updated = models.DateTimeField('last update')
+
     leafletJSON = models.TextField() # stores the Leaflet feature as a JSON object
 
-    center_lat = models.DecimalField(max_digits=9, decimal_places=6)
-    center_lng = models.DecimalField(max_digits=9, decimal_places=6)
+    center_lat = models.DecimalField(max_digits=16, decimal_places=13)
+    center_lng = models.DecimalField(max_digits=16, decimal_places=13)
 
     boundary_left   = models.DecimalField(max_digits=9, decimal_places=6)
     boundary_right  = models.DecimalField(max_digits=9, decimal_places=6)
