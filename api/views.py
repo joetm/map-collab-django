@@ -9,9 +9,13 @@ from django.views.decorators.http import require_http_methods, require_GET
 import json
 
 
-# set header fields
-def respondWith(string):
+def respondWith(obj):
+    if not isinstance(obj, basestring):
+        string = json.dumps(obj)
+    else: # obj is already a string
+        string = obj
     response = HttpResponse(string)
+    # set header fields
     response['Content-Type'] = 'application/json'
     response['Content-Length'] = len(string)
     return response
@@ -25,16 +29,18 @@ def index(request):
 # all features
 @require_GET # only allow GET requests for this route
 def features(request):
-    # TODO: get the shapes from the db
 
-    shapes = json.dumps([])
+    # TODO: get the shapes from the db
+    shapes = []
 
     return respondWith(shapes)
 
 # single feature
 @require_http_methods(["GET", "POST", "PUT"])
 def feature(request, id):
+
     # TODO: get the shape from the db
-    shape = json.dumps({})
+    shape = {}
+
     return respondWith(shape)
 
