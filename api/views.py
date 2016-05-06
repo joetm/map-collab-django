@@ -6,18 +6,14 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 # https://docs.djangoproject.com/en/1.9/topics/http/decorators/
 from django.views.decorators.http import require_http_methods, require_GET
 
-import json
+# import json
 
 
 def respondWith(obj):
-    if not isinstance(obj, basestring):
-        string = json.dumps(obj)
-    else: # obj is already a string
-        string = obj
-    response = HttpResponse(string)
+    response = JsonResponse(obj, safe=False) # safe: allow serialization of non-dict objects
     # set header fields
-    response['Content-Type'] = 'application/json'
-    response['Content-Length'] = len(string)
+    # response['Content-Type'] = ''
+    # response['Content-Length'] = len(string)
     return response
 
 
