@@ -14,7 +14,7 @@ class ShapeAdminConfig(admin.ModelAdmin):
     # prepopulated_fields = {"slug": ("center_lat","center_lng")}
     # fields = ['creation_date', 'center_lat', 'center_lng', 'leafletJSON']
     fieldsets = [
-        ('Leaflet',          {'fields': ['shape_type', 'leafletJSON']}),
+        ('Leaflet',          {'fields': ['_leaflet_id', 'type', 'leafletJSON']}),
         ('Geo',              {'fields': ['center_lat', 'center_lng', 'boundary_left', 'boundary_right', 'boundary_top', 'boundary_bottom']}),
         ('Date information', {'fields': ['creation_date']}),
     ]

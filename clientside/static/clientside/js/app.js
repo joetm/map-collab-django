@@ -8,6 +8,16 @@
 
 $(function() {
 
+    // need to set Django's csrf token for Backbone
+    var BbSync = Backbone.sync,
+        CSRF_TOKEN = $('form#tokenform [name="csrfmiddlewaretoken"]').val();
+    Backbone.sync = function(method, model, options){
+        options.beforeSend = function(xhr){
+            xhr.setRequestHeader('X-CSRFToken', CSRF_TOKEN);
+        };
+        return BbSync(method, model, options);
+    };
+
     //$.ajaxPrefilter(function( options ) {
     //    options.dataType = "json";
     //});

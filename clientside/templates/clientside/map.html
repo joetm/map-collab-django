@@ -27,6 +27,10 @@
 
 	<div id="map"></div>
 
+	<form id="tokenform">
+		{% csrf_token %}
+	</form>
+
 	<script type="text/javascript" src="{% static 'clientside/js/vendor/jquery/jquery-2.1.4.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'clientside/js/vendor/backbone/underscore-min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'clientside/js/vendor/backbone/backbone-min.js' %}"></script>
