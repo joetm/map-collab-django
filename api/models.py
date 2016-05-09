@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+from django.core.urlresolvers import reverse
+
 
 class Shape(models.Model):
 
@@ -11,9 +13,9 @@ class Shape(models.Model):
 
     # id = models.AutoField(primary_key=True)
 
-    _leaflet_id = models.PositiveIntegerField(primary_key=True)
+    _leaflet_id = models.PositiveIntegerField('_leaflet_id', primary_key=True)
 
-    type = models.CharField(max_length=20)
+    type = models.CharField('shape type', max_length=20)
 
     # slug = models.SlugField(max_length=50)
 
@@ -34,6 +36,21 @@ class Shape(models.Model):
 
     encoded = models.CharField(max_length=250)
     options = models.TextField() # stores the Leaflet feature as a JSON object
+
+    # for admin panel
+    def __str__(self):
+        return '%s %s' % (self.type, self.encoded)
+
+    def get_absolute_url(self):
+        return reverse('api.views.feature', args=[str(self._leaflet_id)])
+
+    # https://docs.djangoproject.com/en/1.9/ref/models/options/
+    def Meta():
+        ordering = ["-created", "-_leaflet_id"]	# '-' => descending order
+        verbose_name_plural = "shapes"
+        # https://docs.djangoproject.com/en/1.9/topics/db/models/#abstract-base-classes
+        # abstract = True
+
 
 class Rectangle(Shape):
     type = __name__.lower()

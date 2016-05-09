@@ -53,7 +53,7 @@ def ShapeFactory(filtered_dict):
     elif filtered_dict['type'] == 'Rectangle':
         Obj = Rectangle
     else:
-        Obj = Shape
+        raise Exception('Unknown model') # TODO: exception
 
     return Obj(**filtered_dict)
 
