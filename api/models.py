@@ -15,7 +15,7 @@ class Shape(models.Model):
 
     _leaflet_id = models.PositiveIntegerField('_leaflet_id', primary_key=True)
 
-    type = models.CharField('shape type', max_length=20)
+    # shapetype = models.CharField('shape type', max_length=20)
 
     # slug = models.SlugField(max_length=50)
 
@@ -53,20 +53,20 @@ class Shape(models.Model):
 
 
 class Rectangle(Shape):
-    type = __name__.lower()
+    shapetype = __name__.lower()
 
 class Polygon(Shape):
-    type = __name__.lower()
+    shapetype = __name__.lower()
 
 class Polyline(Shape):
-    type = __name__.lower()
+    shapetype = __name__.lower()
 
 class Circle(Shape):
     radius = models.FloatField()
-    type = __name__.lower()
+    shapetype = __name__.lower()
 
 class Marker(Shape):
-    type = __name__.lower()
+    shapetype = __name__.lower()
 
 
 

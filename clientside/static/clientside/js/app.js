@@ -40,8 +40,8 @@ $(function() {
             model: FModel
         }),
         //feature factory
-        F = function F (type, latlngs, options) {
-            switch (type) {
+        F = function F (shapetype, latlngs, options) {
+            switch (shapetype) {
             case 'circle':
                 radius = options.radius;
                 layer = L.circle(latlngs[0], radius, options);
@@ -133,14 +133,14 @@ $(function() {
 
         var fields = g.get('fields');
         var encoded = fields['encoded'],
-            type = fields['type'],
+            shapetype = fields['shapetype'],
             options = fields['options'],
             //_leaflet_id = g.get('_leaflet_id'),
             f;
 
         options = JSON.parse(options);
         latlngs = L.PolylineUtil.decode(encoded);
-        f = new F(type, latlngs, options);
+        f = new F(shapetype, latlngs, options);
         f.addTo(map);
         drawnItems.addLayer(f);
     }
@@ -166,13 +166,13 @@ $(function() {
         var layer = e.layer,
             g,
             encoded,
-            type = e.layerType,
+            shapetype = e.layerType,
             latlng,
             latlngs,
             radius = false,
             options = layer.options;
 
-        switch (type) {
+        switch (shapetype) {
         case 'circle':
             options.radius = layer._mRadius;
             //fall through
@@ -189,7 +189,7 @@ $(function() {
 
         encoded = L.PolylineUtil.encode(latlngs);
 
-        console.log('type', type);
+        console.log('shapetype', shapetype);
         console.log('encoded', encoded);
         console.log('layer', layer);
         console.log('latlngs', latlngs);
@@ -201,7 +201,7 @@ $(function() {
         g = new FModel({
             '_leaflet_id': layer._leaflet_id,
             'options':     options,
-            'type':        type,
+            'shapetype':   shapetype,
             'encoded':     encoded,
             'center':      { 'lat': TODO, 'lng': TODO },
             'boundary':    { 'top': TODO, 'bottom': TODO, 'left': TODO, 'right': TODO }

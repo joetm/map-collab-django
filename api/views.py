@@ -39,21 +39,21 @@ def index(request):
 
 def ShapeFactory(filtered_dict):
 
-    if not filtered_dict['type']:
+    if not filtered_dict['shapetype']:
         raise # TODO - raise the right Django exception
 
-    if filtered_dict['type'] == 'Marker':
+    if filtered_dict['shapetype'] == 'marker':
         Obj = Marker
-    elif filtered_dict['type'] == 'Circle':
+    elif filtered_dict['shapetype'] == 'circle':
         Obj = Circle
-    elif filtered_dict['type'] == 'Polyline':
+    elif filtered_dict['shapetype'] == 'polyline':
         Obj = Polyline
-    elif filtered_dict['type'] == 'Polygon':
+    elif filtered_dict['shapetype'] == 'polygon':
         Obj = Polygon
-    elif filtered_dict['type'] == 'Rectangle':
+    elif filtered_dict['shapetype'] == 'rectangle':
         Obj = Rectangle
     else:
-        raise Exception('Unknown model') # TODO: exception
+        raise Shape.DoesNotExist("Shape does not exist")
 
     return Obj(**filtered_dict)
 
@@ -89,11 +89,12 @@ def features(request):
         return response
 
     # create a new feature
+    # POST
     else:
 
         # filter keys
         body = json.loads(request.body)
-        accepted_keys = ['_leaflet_id', 'encoded', 'options', 'type'] # 'center', 'boundary'
+        accepted_keys = ['_leaflet_id', 'encoded', 'options', 'shapetype'] # 'center', 'boundary'
         filtered_dict = { key: body.get(key, None) for key in accepted_keys }
 
         # if not filtered_dict.get('created'):
@@ -120,6 +121,9 @@ def features(request):
         shape.save()
 
         response = JsonResponse(serializers.serialize("json", shape), safe=False)
+
+        print response
+
         response['Content-Length'] = len(response.content)
 
         return response
